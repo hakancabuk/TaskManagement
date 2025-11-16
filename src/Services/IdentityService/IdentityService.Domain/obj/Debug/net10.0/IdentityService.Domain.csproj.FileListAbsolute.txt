@@ -1,0 +1,12 @@
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\bin\Debug\net10.0\IdentityService.Domain.deps.json
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\bin\Debug\net10.0\IdentityService.Domain.dll
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\bin\Debug\net10.0\IdentityService.Domain.pdb
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\obj\Debug\net10.0\IdentityService.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\obj\Debug\net10.0\IdentityService.Domain.AssemblyInfoInputs.cache
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\obj\Debug\net10.0\IdentityService.Domain.AssemblyInfo.cs
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\obj\Debug\net10.0\IdentityService.Domain.csproj.CoreCompileInputs.cache
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\obj\Debug\net10.0\IdentityService.Domain.sourcelink.json
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\obj\Debug\net10.0\IdentityService.Domain.dll
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\obj\Debug\net10.0\refint\IdentityService.Domain.dll
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\obj\Debug\net10.0\IdentityService.Domain.pdb
+C:\Users\hakan\Desktop\TaskManagement\TaskManagement\src\Services\IdentityService\IdentityService.Domain\obj\Debug\net10.0\ref\IdentityService.Domain.dll
