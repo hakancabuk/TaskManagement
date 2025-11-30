@@ -1,50 +1,66 @@
 using IdentityService.Infrastructure.Data;
+using IdentityService.Infrastructure.Repositories;
+using IdentityService.Infrastructure.Services;
+using IdentityService.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration; // IConfiguration'ý builder üzerinden alýyoruz
 
+// DbContext - Veritabaný baðlantýsýný doðru þekilde yapýlandýrýyoruz
 builder.Services.AddDbContext<IdentityDbContext>(options =>
+    options.UseSqlServer(config.GetConnectionString("IdentityConnection")));
+
+// Repositories & services - Gerekli servisler ve repository'ler DI konteynerine ekleniyor
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// JWT Authentication yapýlandýrmasý
+var jwtSection = config.GetSection("Jwt"); // appsettings.json'dan Jwt ayarlarýný alýyoruz
+var secret = jwtSection.GetValue<string>("Secret"); // Secret anahtarýný alýyoruz
+var key = Encoding.UTF8.GetBytes(secret); // Secret anahtarýný byte array'e dönüþtürüyoruz
+
+builder.Services.AddAuthentication(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false; // Geliþtirme aþamasýnda HTTPS gereksiz olabilir
+    options.SaveToken = true; // Token'ý saklamasýný saðlýyoruz
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSection.GetValue<string>("Issuer"), // Ýssuer'ý ayarlýyoruz
+        ValidAudience = jwtSection.GetValue<string>("Audience"), // Audience'ý ayarlýyoruz
+        IssuerSigningKey = new SymmetricSecurityKey(key), // Ýmza doðrulama anahtarýný ayarlýyoruz
+        ClockSkew = TimeSpan.Zero // Token'ýn geçerliliði ile ilgili herhangi bir tolerans olmamasý için
+    };
 });
 
+// MVC ve Swagger için gerekli servislerin eklenmesi
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();           // JSON dökümaný üretir
-    app.UseSwaggerUI();         // Swagger UI açýlýr
-}
+// Swagger'ý etkinleþtiriyoruz
+app.UseSwagger();
+app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); // HTTPS'ye yönlendirme
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// Authentication ve Authorization iþlemlerini sýrasýyla ekliyoruz
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapControllers(); // API endpointlerini haritalýyoruz
 
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+app.Run(); // Uygulamayý çalýþtýrýyoruz
